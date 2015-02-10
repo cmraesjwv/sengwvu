@@ -1,0 +1,9 @@
+startNumber = int(raw_input("1 "))
+endNumber = int(raw_input("317811 "))
+
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n-2) + fib(n-1)
+
+print map(fib, range(startNumber, endNumber))
