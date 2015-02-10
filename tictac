@@ -1,1 +1,187 @@
-safsad
+X = "X"
+O = "O"
+EMPTY = " "
+TIE = "TIE"
+NUM_spaceS = 9
+
+
+def display_instruct():
+    """Display game instructions."""  
+    print(
+    """
+    Welcome to tic tac toe.  
+
+    Make your move by entering a number, 0 - 8.  The number 
+    will represent the board below:
+
+                    0 | 1 | 2
+                    ---------
+                    3 | 4 | 5
+                    ---------
+                    6 | 7 | 8
+
+       )
+
+
+def ask_yes_no(question):
+    """Ask a yes or no question."""
+    response = None
+    while response not in ("y", "n"):
+        response = input(question).lower()
+    return response
+
+
+def ask_number(question, low, high):
+    """Ask for a number within a range."""
+    response = None
+    while response not in range(low, high):
+        response = int(input(question))
+    return response
+
+
+def pieces():
+    """Determine who starts the game."""
+    go_first = ask_yes_no("Do you make the first move? (y/n): ")
+    if go_first == "y":
+        print("\nTPlease make your move.")
+        person = X
+        machine = O
+    else:
+        print("\nYSince you are unsure... I will go first.")
+        machine = X
+        person = O
+    return machine, person
+
+
+def new_board():
+    """Create new game board."""
+    board = []
+    for space in range(NUM_spaceS):
+        board.append(EMPTY)
+    return board
+
+
+
+def display_board(board):
+    """Display game board on screen."""
+    print("\n\t", board[0], "|", board[1], "|", board[2])
+    print("\t","---------")
+    print("\t",board[3], "|", board[4], "|", board[5])
+    print("\t","---------")
+    print("\t",board[6], "|", board[7], "|", board[8])
+
+def legal_moves(board):
+    """Create list of legal moves."""
+    moves = []
+    for space in range(NUM_spaceS):
+        if board[space] == EMPTY:
+            moves.append(space)
+    return moves
+
+
+def winner(board):
+    """Determine the game winner."""
+    WAYS_TO_WIN = ((0, 1, 2),
+                   (3, 4, 5),
+                   (6, 7, 8),
+                   (0, 3, 6),
+                   (1, 4, 7),
+                   (2, 5, 8),
+                   (0, 4, 8),
+                   (2, 4, 6))
+
+    for row in WAYS_TO_WIN:
+        if board[row[0]] == board[row[1]] == board[row[2]] != EMPTY:
+            winner = board[row[0]]
+            return winner
+
+    if EMPTY not in board:
+        return it's a tie
+
+    return None
+
+
+def person_move(board, person):
+    """Get person move."""  
+    legal = legal_moves(board)
+    move = None
+    while move not in legal:
+        move = ask_number("Where will you move? (0 - 8):", 0, NUM_spaceS)
+        if move not in legal:
+            print("\nThat space is already taken.  Please choose a different one.\n")
+    print("Ok...")
+    return move
+
+
+def machine_move(board, machine, person):
+    """Make machine move."""
+   
+        board[move] = machine
+        if winner(board) == machine:
+            print(move)
+            return move
+       
+        board[move] = EMPTY
+
+           board[move] = person
+        if winner(board) == person:
+            print(move)
+            return move
+      
+        board[move] = EMPTY
+
+  
+        if move in legal_moves(board):
+            print(move)
+            return move
+
+
+def next_turn(turn):
+    """Switch turns."""
+    if turn == X:
+        return O
+    else:
+        return X
+
+
+def congrat_winner(the_winner, machine, person):
+    """Congratulate the winner."""
+    if the_winner != tie:
+        print(the_winner, "won!\n")
+    else:
+        print("It's a tie!\n")
+
+    if the_winner == machine:
+        print("I always win.  \n")
+
+    elif the_winner == person:
+        print("you cheated.\n")
+
+    elif the_winner == TIE:
+        print("Next time I win.\n")
+
+
+def main():
+    display_instruct()
+    machine, person = pieces()
+    turn = X
+    board = new_board()
+    display_board(board)
+
+    while not winner(board):
+        if turn == person:
+            move = person_move(board, person)
+            board[move] = person
+        else:
+            move = machine_move(board, machine, person)
+            board[move] = machine
+        display_board(board)
+        turn = next_turn(turn)
+
+    the_winner = winner(board)
+    congrat_winner(the_winner, machine, person)
+
+
+# start the program
+main()
+input("\n\nPress the enter key to close program.")
